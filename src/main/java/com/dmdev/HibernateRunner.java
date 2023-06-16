@@ -52,6 +52,7 @@ public class HibernateRunner {
 //                все ниже переводит сущность в состояние detached
 //                удаление из кеша определенной сущности
 //                session.evict(user);
+//                session.detach(user); //по jpa
 //                очистка всего кеша
 //                session.clear();
 //                закрытие сессии
