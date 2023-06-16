@@ -23,9 +23,17 @@ import java.time.LocalDate;
 public class User {
 
     @Id
+    @GeneratedValue(generator = "user_gen", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "user_gen", sequenceName = "users_id_seq", allocationSize = 1)
+    private Long id;
+
+    @Column(unique = true)
     private String username;
-    private String firstname;
-    private String lastname;
+
+    @Embedded
+    @AttributeOverride(name = "firstname", column = @Column(name = "firstname")) //переопределение названия столбца
+    private PersonalInfo personalInfo;
+
     @Column(name = "marriage_date")
     private LocalDate marriageDate;
     @Convert(converter = BirthdayConverter.class)

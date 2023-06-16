@@ -2,6 +2,7 @@ package com.dmdev;
 
 import com.dmdev.converter.BirthdayConverter;
 import com.dmdev.entity.Birthday;
+import com.dmdev.entity.PersonalInfo;
 import com.dmdev.entity.Role;
 import com.dmdev.entity.User;
 import com.dmdev.util.HibernateUtil;
@@ -29,8 +30,10 @@ public class HibernateRunner {
 
             User newUser = User.builder()
                     .username("ivan2@mail.ru")
-                    .firstname("Ivan")
-                    .lastname("Ivanov")
+                    .personalInfo(PersonalInfo.builder()
+                            .firstname("Ivan")
+                            .lastname("Ivanov")
+                            .build())
                     .birthDate(new Birthday(LocalDate.of(2000, 1, 19)))
                     .marriageDate(LocalDate.of(2000, 1, 19))
                     .role(Role.ADMIN)
@@ -44,10 +47,10 @@ public class HibernateRunner {
 
             Transaction transaction = session.beginTransaction();
             try {
-//                session.persist(user);
-                User user1 = session.get(User.class, "ivan2@mail.ru");
+                session.persist(newUser);
+//                User user1 = session.get(User.class, newUser.getId());
 //                нет запроса из-за кеша 1 уровня
-                User user2 = session.get(User.class, "ivan2@mail.ru");
+//                User user2 = session.get(User.class, newUser.getId());
 
 //                все ниже переводит сущность в состояние detached
 //                удаление из кеша определенной сущности
@@ -58,7 +61,7 @@ public class HibernateRunner {
 //                закрытие сессии
 //                session.close();
 
-                user1.setLastname("Petrov");
+                newUser.getPersonalInfo().setLastname("Petrov");
 //                грязная сессия, в конце произойдет update для синхронизации сущности с бд
                 System.out.println("session.isDirty() = " + session.isDirty());
 

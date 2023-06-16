@@ -1,6 +1,7 @@
 package com.dmdev;
 
 import com.dmdev.entity.Birthday;
+import com.dmdev.entity.PersonalInfo;
 import com.dmdev.entity.Role;
 import com.dmdev.entity.User;
 import com.dmdev.util.HibernateUtil;
@@ -18,9 +19,11 @@ public class HibernateRunner2 {
 
         //transient
         User user = User.builder()
-                .username("ivan3@mail.ru")
-                .firstname("Ivan")
-                .lastname("Ivanov")
+                .username("ivan4@mail.ru")
+                .personalInfo(PersonalInfo.builder()
+                        .firstname("Ivan")
+                        .lastname("Ivanov")
+                        .build())
                 .birthDate(new Birthday(LocalDate.of(2000, 1, 19)))
                 .marriageDate(LocalDate.of(2000, 1, 19))
                 .role(Role.ADMIN)
@@ -46,7 +49,7 @@ public class HibernateRunner2 {
             try (Session session2 = sessionFactory.openSession()) {
                 session2.beginTransaction();
 
-                user.setFirstname("Test");
+                user.getPersonalInfo().setFirstname("Test");
 //                обновляет объект с бд
                 session2.refresh(user);
 

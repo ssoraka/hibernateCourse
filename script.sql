@@ -2,7 +2,8 @@ drop TABLE users;
 
 create table users
 (
-    username varchar(128) primary key,
+    id bigint primary key,
+    username varchar(128) unique ,
     firstname varchar(128),
     lastname varchar(128),
     marriage_date date,
@@ -10,3 +11,5 @@ create table users
     role varchar(32),
     info JSONB
 );
+
+create sequence users_id_seq owned by users.id;
