@@ -1,11 +1,16 @@
 package com.dmdev.entity;
 
 import com.dmdev.converter.BirthdayConverter;
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
+import com.vladmihalcea.hibernate.type.json.JsonBlobType;
+import com.vladmihalcea.hibernate.type.json.JsonStringType;
+import com.vladmihalcea.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 import java.time.LocalDate;
 
@@ -29,4 +34,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+
+    @Type(value = JsonBinaryType.class)
+    private String info;
 }

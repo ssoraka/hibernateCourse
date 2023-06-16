@@ -17,6 +17,13 @@ java {
 dependencies {
     implementation 'org.hibernate:hibernate-core:6.2.4.Final'
     implementation 'org.postgresql:postgresql:42.6.0'
+//    чтоб не писать свои типы
+    implementation 'com.vladmihalcea:hibernate-types-60:2.21.1'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.15.2'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+    implementation 'org.slf4j:slf4j-api:2.0.7'
+
+
     compileOnly 'org.projectlombok:lombok:1.18.28'
     annotationProcessor 'org.projectlombok:lombok:1.18.28'
 

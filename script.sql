@@ -7,5 +7,6 @@ create table users
     lastname varchar(128),
     marriage_date date,
     birth_date date,
-    role varchar(32)
+    role varchar(32),
+    info JSONB
 );
