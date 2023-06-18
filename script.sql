@@ -26,6 +26,16 @@ create table users (
     company_id int references company(id)
 );
 
+create table users_chat (
+    user_id bigint references users(id),
+    chat_id bigint references chat(id),
+    primary key (user_id, chat_id)
+)
+
+create table chat (
+    id bigserial primary key,
+    name varchar(64) not null unique
+);
 
 
 --create sequence users_id_seq owned by users.id;

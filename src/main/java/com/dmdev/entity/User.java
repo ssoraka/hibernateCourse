@@ -10,6 +10,8 @@ import lombok.*;
 import org.hibernate.annotations.Type;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -58,5 +60,20 @@ public class User {
 //    нет ленивой инициализации, тк в любом случае надо делать запрос в бд, чтоб выявить наличие связи
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Profile profile;
+
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @Builder.Default
+    @ManyToMany
+    @JoinTable(name = "users_chat",
+                joinColumns = @JoinColumn(name = "user_id"),
+                inverseJoinColumns = @JoinColumn(name = "chat_id"))
+    private Set<Chat> chats = new HashSet<>();
+
+    public void addChat(Chat chat) {
+        chats.add(chat);
+        chat.getUsers().add(this);
+    }
 }

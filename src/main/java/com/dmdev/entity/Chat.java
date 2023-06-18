@@ -10,24 +10,19 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(exclude = "users")
-@EqualsAndHashCode(exclude = "users")
+@EqualsAndHashCode(of = "name")
 @Builder
 @Entity
-public class Company {
+public class Chat {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true)
     private String name;
 
     @Builder.Default
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
-//    @JoinColumn(name = "company_id") //можно указывать без связи @ManyToOne
+    @ManyToMany(mappedBy = "chats")
     private Set<User> users = new HashSet<>();
-
-    public void addUser(User user) {
-        users.add(user);
-        user.setCompany(this);
-    }
 }
