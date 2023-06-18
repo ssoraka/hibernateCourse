@@ -1,6 +1,7 @@
 drop TABLE users;
 drop TABLE company;
 drop TABLE profile;
+drop TABLE users_chat;
 
 create table company (
     id serial primary key,
@@ -27,14 +28,24 @@ create table users (
 );
 
 create table users_chat (
+    id serial primary key,
     user_id bigint references users(id),
     chat_id bigint references chat(id),
-    primary key (user_id, chat_id)
+    created_at timestamp not null,
+    created_by varchar(128) not null,
+    unique (user_id, chat_id)
 )
 
 create table chat (
     id bigserial primary key,
     name varchar(64) not null unique
+);
+
+create table company_locale (
+    company_id int not null references company(id),
+    lang char(2) not null,
+    description varchar(128) not null,
+    primary key (company_id, lang)
 );
 
 

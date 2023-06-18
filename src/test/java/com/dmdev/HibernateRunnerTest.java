@@ -13,6 +13,7 @@ import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Optional;
@@ -21,6 +22,34 @@ import java.util.stream.Collectors;
 
 class HibernateRunnerTest {
 
+
+    @Test
+    void orderedBy() {
+        try(var sessionFactory = HibernateUtil.buildSessionFactory();
+            var session = sessionFactory.openSession()) {
+            session.beginTransaction();
+
+            var company = session.get(Company.class, 2l);
+            company.getUsers().forEach((k, v) -> System.out.println(v));
+
+            session.getTransaction().commit();
+        }
+    }
+
+    @Test
+    void localeInfo() {
+        try(var sessionFactory = HibernateUtil.buildSessionFactory();
+            var session = sessionFactory.openSession()) {
+            session.beginTransaction();
+
+            var company = session.get(Company.class, 2l);
+            company.getLocales().add(LocaleInfo.of("ru", "описание на русском"));
+            company.getLocales().add(LocaleInfo.of("en", "english description"));
+
+            session.getTransaction().commit();
+        }
+    }
+
     @Test
     void checkManyToMany() {
         try(var sessionFactory = HibernateUtil.buildSessionFactory();
@@ -28,15 +57,16 @@ class HibernateRunnerTest {
             session.beginTransaction();
 
             User user = session.get(User.class, 6l);
-            user.getChats().clear();
+            Chat chat = session.get(Chat.class, 1l);
 
-            var chat = Chat.builder()
-                    .name("dmdev2")
+            var userChat = UserChat.builder()
+                    .createdAt(Instant.now())
+                    .createdBy(user.getUsername())
                     .build();
 
-            user.addChat(chat);
-
-            session.persist(chat);
+            userChat.setUser(user);
+            userChat.setChat(chat);
+            session.persist(userChat);
 
 //            User user = session.get(User.class, 6l);
 
@@ -83,10 +113,10 @@ class HibernateRunnerTest {
             session.getTransaction().commit();
         }
 
-        Set<User> users = company.getUsers();
+        var users = company.getUsers();
         System.out.println(users.size()); // LazyInitializationException
 
-        Set<User> users1 = companyRef.getUsers(); // LazyInitializationException
+        var users1 = companyRef.getUsers(); // LazyInitializationException
     }
     @Test
     void deleteCompany() {

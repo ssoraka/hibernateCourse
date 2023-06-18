@@ -3,13 +3,13 @@ package com.dmdev.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = "users")
+@ToString(exclude = "userChats")
 @EqualsAndHashCode(of = "name")
 @Builder
 @Entity
@@ -23,6 +23,9 @@ public class Chat {
     private String name;
 
     @Builder.Default
-    @ManyToMany(mappedBy = "chats")
-    private Set<User> users = new HashSet<>();
+    @OneToMany(mappedBy = "chat")
+    private List<UserChat> userChats = new ArrayList<>();
+
+//    @ManyToMany(mappedBy = "chats")
+//    private Set<User> users = new HashSet<>();
 }
