@@ -1,9 +1,12 @@
 package com.dmdev;
 
-import com.dmdev.entity.Birthday;
-import com.dmdev.entity.User;
+import com.dmdev.entity.*;
+import com.dmdev.util.HibernateUtil;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
+import lombok.Cleanup;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
@@ -13,16 +16,109 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 class HibernateRunnerTest {
 
     @Test
+    void checkOneToOne() {
+        try(var sessionFactory = HibernateUtil.buildSessionFactory();
+            var session = sessionFactory.openSession()) {
+            session.beginTransaction();
+
+//            var user = User.builder()
+//                    .username("test3@mail.ru")
+//                    .build();
+//
+//            var profile = Profile.builder()
+//                    .language("ru")
+//                    .street("Lenina")
+//                    .build();
+//
+//            profile.setUser(user);
+//
+//            session.persist(user);
+
+            User user = session.get(User.class, 6l);
+
+            session.getTransaction().commit();
+        }
+    }
+
+    @Test
+    void checkLazyInitialisation() {
+        Company company = null;
+        Company companyRef = null;
+        try(var sessionFactory = HibernateUtil.buildSessionFactory();
+            var session = sessionFactory.openSession()) {
+            session.beginTransaction();
+
+            company = session.get(Company.class, 2l);
+            companyRef = session.getReference(Company.class, 2l); //возвращает прокси, не делая запрос
+
+            session.getTransaction().commit();
+        }
+
+        Set<User> users = company.getUsers();
+        System.out.println(users.size()); // LazyInitializationException
+
+        Set<User> users1 = companyRef.getUsers(); // LazyInitializationException
+    }
+    @Test
+    void deleteCompany() {
+        @Cleanup var sessionFactory = HibernateUtil.buildSessionFactory();
+        @Cleanup var session = sessionFactory.openSession();
+        session.beginTransaction();
+
+        Company company = session.get(Company.class, 3l);
+        session.remove(company);
+
+        session.getTransaction().commit();
+    }
+
+    @Test
+    void addUserToNewCompany() {
+        @Cleanup var sessionFactory = HibernateUtil.buildSessionFactory();
+        @Cleanup var session = sessionFactory.openSession();
+        session.beginTransaction();
+
+
+        var company = Company.builder()
+                .name("Facebook")
+                .build();
+
+        var user = User.builder()
+                .username("sveta@mail.ru")
+                .build();
+
+        company.addUser(user);
+
+        session.persist(company);
+
+        session.getTransaction().commit();
+    }
+
+    @Test
+    void oneToMany() {
+        @Cleanup var sessionFactory = HibernateUtil.buildSessionFactory();
+        @Cleanup var session = sessionFactory.openSession();
+        session.beginTransaction();
+
+        var company = session.get(Company.class, 1l);
+        System.out.println(company.getUsers());
+
+        session.getTransaction().commit();
+    }
+
+    @Test
     void checkReflectionApi() throws SQLException, IllegalAccessException {
         User user = User.builder()
                 .username("ivan@mail.ru")
-                .firstname("Ivan")
-                .lastname("Ivanov")
+                .personalInfo(PersonalInfo.builder()
+                        .firstname("Ivan")
+                        .lastname("Ivanov")
+                        .build())
                 .birthDate(new Birthday(LocalDate.of(2000, 1, 19)))
                 .marriageDate(LocalDate.of(2000, 1, 19))
                 .build();

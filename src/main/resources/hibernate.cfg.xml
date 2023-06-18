@@ -12,6 +12,8 @@
         <property name="format_sql">true</property>
 
         <mapping class="com.dmdev.entity.User"/>
+        <mapping class="com.dmdev.entity.Company"/>
+        <mapping class="com.dmdev.entity.Profile"/>
         <!-- List of XML mapping files -->
 <!--        <mapping resource = "Employee.hbm.xml"/>-->
 
