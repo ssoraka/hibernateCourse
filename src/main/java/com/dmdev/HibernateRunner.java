@@ -27,23 +27,23 @@ public class HibernateRunner {
                 //аналог connection
                 Session session = sessionFactory.openSession();
         ) {
-
-            User newUser = User.builder()
-                    .username("ivan2@mail.ru")
-                    .personalInfo(PersonalInfo.builder()
-                            .firstname("Ivan")
-                            .lastname("Ivanov")
-                            .build())
-                    .birthDate(new Birthday(LocalDate.of(2000, 1, 19)))
-                    .marriageDate(LocalDate.of(2000, 1, 19))
-                    .role(Role.ADMIN)
-                    .info("""
-                            {
-                            "name": "Ivan",
-                            "age": 19
-                            }
-                            """)
-                    .build();
+            User newUser = null;
+//            User newUser = User.builder()
+//                    .username("ivan2@mail.ru")
+//                    .personalInfo(PersonalInfo.builder()
+//                            .firstname("Ivan")
+//                            .lastname("Ivanov")
+//                            .build())
+//                    .birthDate(new Birthday(LocalDate.of(2000, 1, 19)))
+//                    .marriageDate(LocalDate.of(2000, 1, 19))
+//                    .role(Role.ADMIN)
+//                    .info("""
+//                            {
+//                            "name": "Ivan",
+//                            "age": 19
+//                            }
+//                            """)
+//                    .build();
 
             Transaction transaction = session.beginTransaction();
             try {

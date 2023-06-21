@@ -5,17 +5,17 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.time.Instant;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+//@NoArgsConstructor
+//@AllArgsConstructor
+@SuperBuilder
 @Entity
 @Table(name = "users_chat", schema = "public")
-public class UserChat {
-
+public class UserChat extends AuditableEntity<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,12 +26,6 @@ public class UserChat {
     @ManyToOne
     @JoinColumn(name = "chat_id")
     private Chat chat;
-
-    @Column(name = "created_at")
-    private Instant createdAt;
-
-    @Column(name = "created_by")
-    private String createdBy;
 
     public void setUser(User user) {
         this.user = user;

@@ -33,8 +33,26 @@ class HibernateRunnerTest {
                     .name("Google")
                     .build();
 
+            Programmer programmer = Programmer.builder()
+                    .username("ivan@mail.ru")
+                    .language(Language.JAVA)
+                    .company(company)
+                    .build();
+
+            Manager manager = Manager.builder()
+                    .username("misha@mail.ru")
+                    .projectName("starter")
+                    .company(company)
+                    .build();
 
             session.persist(company);
+            session.persist(programmer);
+            session.persist(manager);
+            session.flush();
+            session.clear();
+
+            Programmer programmer1 = session.get(Programmer.class, 1l);
+            User user = session.get(User.class, 2l);
 
             session.getTransaction().commit();
         }
@@ -97,9 +115,10 @@ class HibernateRunnerTest {
             var session = sessionFactory.openSession()) {
             session.beginTransaction();
 
-            var user = User.builder()
-                    .username("test3@mail.ru")
-                    .build();
+            User user = null;
+//            var user = User.builder()
+//                    .username("test3@mail.ru")
+//                    .build();
 
             var profile = Profile.builder()
                     .language("ru")
@@ -158,9 +177,10 @@ class HibernateRunnerTest {
                 .name("Facebook")
                 .build();
 
-        var user = User.builder()
-                .username("sveta@mail.ru")
-                .build();
+        User user = null;
+//        var user = User.builder()
+//                .username("sveta@mail.ru")
+//                .build();
 
         company.addUser(user);
 
@@ -183,15 +203,16 @@ class HibernateRunnerTest {
 
     @Test
     void checkReflectionApi() throws SQLException, IllegalAccessException {
-        User user = User.builder()
-                .username("ivan@mail.ru")
-                .personalInfo(PersonalInfo.builder()
-                        .firstname("Ivan")
-                        .lastname("Ivanov")
-                        .build())
-                .birthDate(new Birthday(LocalDate.of(2000, 1, 19)))
-                .marriageDate(LocalDate.of(2000, 1, 19))
-                .build();
+        User user = null;
+//        User user = User.builder()
+//                .username("ivan@mail.ru")
+//                .personalInfo(PersonalInfo.builder()
+//                        .firstname("Ivan")
+//                        .lastname("Ivanov")
+//                        .build())
+//                .birthDate(new Birthday(LocalDate.of(2000, 1, 19)))
+//                .marriageDate(LocalDate.of(2000, 1, 19))
+//                .build();
 
         String sql = """
                 insert

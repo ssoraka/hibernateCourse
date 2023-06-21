@@ -18,22 +18,23 @@ public class HibernateRunner2 {
     public static void main(String[] args) throws SQLException, InterruptedException {
 
         //transient
-        User user = User.builder()
-                .username("ivan4@mail.ru")
-                .personalInfo(PersonalInfo.builder()
-                        .firstname("Ivan")
-                        .lastname("Ivanov")
-                        .build())
-                .birthDate(new Birthday(LocalDate.of(2000, 1, 19)))
-                .marriageDate(LocalDate.of(2000, 1, 19))
-                .role(Role.ADMIN)
-                .info("""
-                            {
-                            "name": "Ivan",
-                            "age": 19
-                            }
-                            """)
-                .build();
+        User user = null;
+//        User user = User.builder()
+//                .username("ivan4@mail.ru")
+//                .personalInfo(PersonalInfo.builder()
+//                        .firstname("Ivan")
+//                        .lastname("Ivanov")
+//                        .build())
+//                .birthDate(new Birthday(LocalDate.of(2000, 1, 19)))
+//                .marriageDate(LocalDate.of(2000, 1, 19))
+//                .role(Role.ADMIN)
+//                .info("""
+//                            {
+//                            "name": "Ivan",
+//                            "age": 19
+//                            }
+//                            """)
+//                .build();
 
         try ( SessionFactory sessionFactory = HibernateUtil.buildSessionFactory()) {
 

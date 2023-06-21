@@ -7,6 +7,7 @@ import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import com.vladmihalcea.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Type;
 
 import java.time.LocalDate;
@@ -15,13 +16,25 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+//@Inheritance(strategy = InheritanceType.JOINED)
+//сложный селект с джоином всех таблиц
+
+//@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+//нужен общий sequence для двух таблиц
+//в этом случае
+//select by user - делает запрос в обе таблицы с union
+
+//@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+//@DiscriminatorColumn(name = "type")
+//не можем делать constraint
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+//@SuperBuilder
 @Entity
 @Table(name = "users" /*, schema = "public"*/)
-public class User {
+@Inheritance(strategy = InheritanceType.JOINED)
+public class User implements BaseEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -69,7 +82,7 @@ public class User {
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @Builder.Default
+//    @Builder.Default
     @OneToMany(mappedBy = "user")
     private List<UserChat> userChats = new ArrayList<>();
 
