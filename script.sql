@@ -8,13 +8,6 @@ create table company (
     name varchar(64) not null unique
 );
 
-create table profile (
-    id serial primary key,
-    user_id bigint not null unique references users(id),
-    street varchar(128),
-    language char(2)
-)
-
 create table users (
     id serial primary key,
     username varchar(128) unique ,
@@ -27,6 +20,18 @@ create table users (
     company_id int references company(id)
 );
 
+create table profile (
+    id serial primary key,
+    user_id bigint not null unique references users(id),
+    street varchar(128),
+    language char(2)
+);
+
+create table chat (
+    id bigserial primary key,
+    name varchar(64) not null unique
+);
+
 create table users_chat (
     id serial primary key,
     user_id bigint references users(id),
@@ -34,11 +39,6 @@ create table users_chat (
     created_at timestamp not null,
     created_by varchar(128) not null,
     unique (user_id, chat_id)
-)
-
-create table chat (
-    id bigserial primary key,
-    name varchar(64) not null unique
 );
 
 create table company_locale (

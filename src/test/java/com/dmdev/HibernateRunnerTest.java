@@ -1,6 +1,7 @@
 package com.dmdev;
 
 import com.dmdev.entity.*;
+import com.dmdev.util.HibernateTestUtil;
 import com.dmdev.util.HibernateUtil;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
@@ -22,6 +23,22 @@ import java.util.stream.Collectors;
 
 class HibernateRunnerTest {
 
+    @Test
+    void checkH2() {
+        try(var sessionFactory = HibernateTestUtil.buildSessionFactory();
+            var session = sessionFactory.openSession()) {
+            session.beginTransaction();
+
+            var company = Company.builder()
+                    .name("Google")
+                    .build();
+
+
+            session.persist(company);
+
+            session.getTransaction().commit();
+        }
+    }
 
     @Test
     void orderedBy() {

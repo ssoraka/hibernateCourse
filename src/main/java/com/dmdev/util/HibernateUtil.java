@@ -15,6 +15,15 @@ public class HibernateUtil {
 //        Connection connection = pool.take();
 
 
+        Configuration config = buildConfiguration();
+
+//       by default
+//        config.configure("/path/to/hibernate.cfg.xml");
+        config.configure();
+        return config.buildSessionFactory();
+    }
+
+    public static Configuration buildConfiguration() {
         Configuration config = new Configuration();
 //        <mapping class="com.dmdev.entity.User"/>
 //        config.addAnnotatedClass(User.class);
@@ -27,10 +36,6 @@ public class HibernateUtil {
 //        @Converter(autoApply = true)
 
         config.registerTypeOverride(new JsonBinaryType(), new String[]{"jsonb"});
-
-//       by default
-//        config.configure("/path/to/hibernate.cfg.xml");
-        config.configure();
-        return config.buildSessionFactory();
+        return config;
     }
 }

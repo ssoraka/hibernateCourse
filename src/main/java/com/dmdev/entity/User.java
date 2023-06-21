@@ -20,7 +20,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "users", schema = "public")
+@Table(name = "users" /*, schema = "public"*/)
 public class User {
 
     @Id
@@ -49,7 +49,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Type(value = JsonBinaryType.class)
+//    не поддерживается H2
+//    в тестконтейнере тоже не запустилось
+//    @Type(value = JsonBinaryType.class)
     private String info;
 
 //    optional = true - left join
