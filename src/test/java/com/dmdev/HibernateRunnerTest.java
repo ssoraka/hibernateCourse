@@ -4,10 +4,14 @@ import com.dmdev.entity.*;
 import com.dmdev.util.HibernateTestUtil;
 import com.dmdev.util.HibernateUtil;
 import jakarta.persistence.Column;
+import jakarta.persistence.FlushModeType;
+import jakarta.persistence.QueryHint;
 import jakarta.persistence.Table;
 import lombok.Cleanup;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.annotations.QueryHints;
+import org.hibernate.jpa.AvailableHints;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
@@ -17,11 +21,46 @@ import java.sql.SQLException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 class HibernateRunnerTest {
+
+    @Test
+    void checkHql() {
+        try(var sessionFactory = HibernateTestUtil.buildSessionFactory();
+            var session = sessionFactory.openSession()) {
+            session.beginTransaction();
+
+            List<User> list = session.createNamedQuery("findUserByName", User.class)
+                    .setParameter("firstname", "Ivan")
+                    .setParameter("companyName", "Google")
+//                    .setHint(QueryHints.FLUSH_MODE, "commit")
+                    .setFlushMode(FlushModeType.COMMIT)
+                    .setHint(AvailableHints.HINT_FETCH_SIZE, "50")
+                    .list();
+
+//            List<User> list = session.createQuery("select u from User u " +
+//                            "join u.company c " +
+//                            "where u.personalInfo.firstname = :firstname and c.name = :companyName " +
+//                            "order by u.personalInfo.lastname desc ", User.class)
+//                    .setParameter("firstname", "Ivan")
+//                    .setParameter("companyName", "Google")
+//                    .list();
+
+            int countRows = session.createQuery("update User u set u.role = :role ")
+                    .setParameter("role", Role.ADMIN)
+                    .executeUpdate();
+
+            var nativeQuery = session.createNativeQuery("select u.* from users u where u.firstname = :name ", User.class)
+                    .setParameter("name", "Ivan")
+                    .list();
+
+            session.getTransaction().commit();
+        }
+    }
 
     @Test
     void checkH2() {

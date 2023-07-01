@@ -16,6 +16,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+
+
 //@Inheritance(strategy = InheritanceType.JOINED)
 //сложный селект с джоином всех таблиц
 
@@ -27,6 +29,10 @@ import java.util.Set;
 //@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 //@DiscriminatorColumn(name = "type")
 //не можем делать constraint
+@NamedQuery(name = "findUserByName", query = "select u from User u " +
+        "join u.company c " +
+        "where u.personalInfo.firstname = :firstname and c.name = :companyName " +
+        "order by u.personalInfo.lastname desc ")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
