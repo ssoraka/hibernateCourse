@@ -3,6 +3,7 @@ package com.dmdev;
 import com.dmdev.entity.*;
 import com.dmdev.util.HibernateTestUtil;
 import com.dmdev.util.HibernateUtil;
+import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.persistence.Column;
 import jakarta.persistence.FlushModeType;
 import jakarta.persistence.QueryHint;
@@ -12,6 +13,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.annotations.QueryHints;
 import org.hibernate.jpa.AvailableHints;
+import org.hibernate.query.criteria.HibernateCriteriaBuilder;
+import org.hibernate.query.criteria.JpaCriteriaQuery;
+import org.hibernate.query.criteria.JpaRoot;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
@@ -27,6 +31,28 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 class HibernateRunnerTest {
+
+    @Test
+    void checkCriteria() {
+        try(var sessionFactory = HibernateTestUtil.buildSessionFactory();
+            var session = sessionFactory.openSession()) {
+            session.beginTransaction();
+
+            HibernateCriteriaBuilder cb = session.getCriteriaBuilder();
+            JpaCriteriaQuery<User> criteria = cb.createQuery(User.class);
+
+            JpaRoot<User> user = criteria.from(User.class);
+//            criteria.select(user)
+//                    .where(cb.equal(user.get(User_.personalInfo).get(PersonalInfo_.firstname), "Ivan"))
+//                    .orderBy(cb.asc(user.get(User_.personalInfo)));
+
+
+            List<User> list = session.createQuery(criteria).list();
+
+
+            session.getTransaction().commit();
+        }
+    }
 
     @Test
     void checkHql() {
@@ -62,40 +88,40 @@ class HibernateRunnerTest {
         }
     }
 
-    @Test
-    void checkH2() {
-        try(var sessionFactory = HibernateTestUtil.buildSessionFactory();
-            var session = sessionFactory.openSession()) {
-            session.beginTransaction();
-
-            var company = Company.builder()
-                    .name("Google")
-                    .build();
-
-            Programmer programmer = Programmer.builder()
-                    .username("ivan@mail.ru")
-                    .language(Language.JAVA)
-                    .company(company)
-                    .build();
-
-            Manager manager = Manager.builder()
-                    .username("misha@mail.ru")
-                    .projectName("starter")
-                    .company(company)
-                    .build();
-
-            session.persist(company);
-            session.persist(programmer);
-            session.persist(manager);
-            session.flush();
-            session.clear();
-
-            Programmer programmer1 = session.get(Programmer.class, 1l);
-            User user = session.get(User.class, 2l);
-
-            session.getTransaction().commit();
-        }
-    }
+//    @Test
+//    void checkH2() {
+//        try(var sessionFactory = HibernateTestUtil.buildSessionFactory();
+//            var session = sessionFactory.openSession()) {
+//            session.beginTransaction();
+//
+//            var company = Company.builder()
+//                    .name("Google")
+//                    .build();
+//
+//            Programmer programmer = Programmer.builder()
+//                    .username("ivan@mail.ru")
+//                    .language(Language.JAVA)
+//                    .company(company)
+//                    .build();
+//
+//            Manager manager = Manager.builder()
+//                    .username("misha@mail.ru")
+//                    .projectName("starter")
+//                    .company(company)
+//                    .build();
+//
+//            session.persist(company);
+//            session.persist(programmer);
+//            session.persist(manager);
+//            session.flush();
+//            session.clear();
+//
+//            Programmer programmer1 = session.get(Programmer.class, 1l);
+//            User user = session.get(User.class, 2l);
+//
+//            session.getTransaction().commit();
+//        }
+//    }
 
     @Test
     void orderedBy() {
