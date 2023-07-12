@@ -17,6 +17,8 @@
         <mapping class="com.dmdev.entity.UserChat"/>
         <mapping class="com.dmdev.entity.Programmer"/>
         <mapping class="com.dmdev.entity.Manager"/>
+        <mapping class="com.dmdev.entity.Payment"/>
+        <mapping class="com.dmdev.entity.Audit"/>
         <!-- List of XML mapping files -->
 <!--        <mapping resource = "Employee.hbm.xml"/>-->
 

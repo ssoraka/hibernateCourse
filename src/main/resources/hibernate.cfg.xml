@@ -18,6 +18,7 @@
         <mapping class="com.dmdev.entity.Chat"/>
         <mapping class="com.dmdev.entity.UserChat"/>
         <mapping class="com.dmdev.entity.Payment"/>
+        <mapping class="com.dmdev.entity.Audit"/>
 <!--        <mapping class="com.dmdev.entity.Programmer"/>-->
 <!--        <mapping class="com.dmdev.entity.Manager"/>-->
         <!-- List of XML mapping files -->
