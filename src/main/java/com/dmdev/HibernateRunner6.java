@@ -7,6 +7,7 @@ import com.dmdev.util.TestDataImporter;
 import jakarta.persistence.LockModeType;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.cache.spi.support.RegionFactoryTemplate;
 import org.hibernate.jdbc.Work;
 
 import java.sql.Connection;

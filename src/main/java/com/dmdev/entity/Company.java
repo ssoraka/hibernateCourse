@@ -2,6 +2,8 @@ package com.dmdev.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.SortNatural;
 
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ import java.util.Map;
 @EqualsAndHashCode(exclude = "users")
 @Builder
 @Entity
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "Companies")
 public class Company {
 
     @Id

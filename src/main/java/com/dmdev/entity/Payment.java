@@ -2,9 +2,8 @@ package com.dmdev.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.OptimisticLockType;
-import org.hibernate.annotations.OptimisticLocking;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.Cache;
 
 import java.time.Instant;
 
@@ -18,6 +17,7 @@ import java.time.Instant;
 //@OptimisticLocking(type = OptimisticLockType.ALL) //все поля включаются в where
 //@OptimisticLocking(type = OptimisticLockType.DIRTY) //все неизменившиеся поля включаются в where
 //@DynamicUpdate
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Payment extends AuditableEntity<Long> {
 
     @Id

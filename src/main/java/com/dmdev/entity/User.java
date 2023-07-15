@@ -12,6 +12,7 @@ import jakarta.persistence.Table;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.*;
+import org.hibernate.annotations.Cache;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -63,6 +64,7 @@ import java.util.Set;
 @Entity
 @Table(name = "users" /*, schema = "public"*/)
 //@Inheritance(strategy = InheritanceType.JOINED)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "Users")
 public class User implements BaseEntity<Long> {
 
     @Id
@@ -115,12 +117,14 @@ public class User implements BaseEntity<Long> {
     @EqualsAndHashCode.Exclude
     @Builder.Default
     @OneToMany(mappedBy = "user")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<UserChat> userChats = new HashSet<>();
 
     @Builder.Default
 //    @BatchSize(size = 3) //позволяет запрашивать по несколько записей за раз при помощи in(...)
 //    @Fetch(FetchMode.SUBSELECT) //делает подзапрос специально для коллекций
-    @OneToMany(mappedBy = "receiver")
+    @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY)
+    @ToString.Exclude
     private List<Payment> payments = new ArrayList<>();
 
 //    @ManyToMany
